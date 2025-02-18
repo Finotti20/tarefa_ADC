@@ -75,10 +75,11 @@ int main() {
         adc_select_input(1);  
         uint16_t vry_value = adc_read();
 
-        // 🔴 Se o LED vermelho estiver ligado, aplica PWM
-        if (led_state_red) {
+        // 🔴 Se o LED vermelho estiver ligado, aplica PWM, exceto quando vrx_value estiver entre 2020 e 2024
+        if (led_state_red && !(vrx_value >= 2018 && vrx_value <= 2048)) {
             gpio_set_function(LED_PIN, GPIO_FUNC_PWM); // Garante que está em PWM
             pwm_set_gpio_level(LED_PIN, vrx_value); 
+            printf("O valor de vrx_value e: %d\n", vrx_value);
         } else {
             gpio_set_function(LED_PIN, GPIO_FUNC_SIO);
             gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -86,7 +87,7 @@ int main() {
         }
 
         // 🔵 Se o LED azul estiver ligado, aplica PWM
-        if (led_state_blue) {
+        if (led_state_blue && !(vrx_value >= 2018 && vrx_value <= 2048)) {
             gpio_set_function(LED2_PIN, GPIO_FUNC_PWM);
             pwm_set_gpio_level(LED2_PIN, vry_value);
         } else {
